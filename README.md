@@ -22,6 +22,8 @@ graphsurgeon == 0.3.2
 
 uff == 0.5.5
 
+cmake == 3.10.2
+
 本例子可以學到什麼?
 
 1.在Jetson Nano上面訓練和推論
