@@ -1,6 +1,9 @@
 # tensorRT_mnist_example
 在Jetson Nano使用TensorRT以MNIST為例
-此範例參考NVIDIA範例再修改，範例在/usr/src/tensorrt/samples/python
+
+此範例參考NVIDIA範例再修改，
+
+範例在/usr/src/tensorrt/samples/python
 
 Jetson Nano環境
 
