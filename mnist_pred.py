@@ -11,11 +11,12 @@ import tensorrt as trt
 # use python api tensorRT
 import pycuda.driver as cuda
 import pycuda.autoinit
+
 import graphsurgeon as gs
 import ctypes
 import uff
 
-# Path where clip plugin library will be built (check README.md)
+
 CLIP_PLUGIN_LIBRARY = os.path.join(
     os.path.dirname(os.path.realpath(__file__)),
     './build/libclipplugin.so'
@@ -47,12 +48,11 @@ class HostDeviceMem(object):
 
     def __repr__(self):
         return self.__str__()
+
 def prepare_namespace_plugin_map():
     # In this sample, the only operation that is not supported by TensorRT
     # is tf.nn.relu6, so we create a new node which will tell UffParser which
     # plugin to run and with which arguments in place of tf.nn.relu6.
-
-
     # The "clipMin" and "clipMax" fields of this TensorFlow node will be parsed by createPlugin,
     # and used to create a CustomClipPlugin with the appropriate parameters.
     trt_relu6 = gs.create_plugin_node(name="trt_relu6", op="CustomClipPlugin", clipMin=0.0, clipMax=6.0)
@@ -88,7 +88,6 @@ def find_data(description="Runs a TensorRT Python sample", subfolder="", find_fi
     parser.add_argument("-d", "--datadir", help="Location of the TensorRT sample data directory.", default=kDEFAULT_DATA_ROOT)
     args, unknown_args = parser.parse_known_args()
 
-    # If data directory is not specified, use the default.
     data_root = args.datadir
     subfolder_path = os.path.join(data_root, subfolder)
     data_path = subfolder_path
@@ -106,15 +105,12 @@ def find_data(description="Runs a TensorRT Python sample", subfolder="", find_fi
 
 def build_engine(model_path):
     # Create the builder, network, and parser
-    # https://docs.nvidia.com/deeplearning/sdk/tensorrt-api/python_api/infer/Core/Builder.html
     with trt.Builder(TRT_LOGGER) as builder, builder.create_network() as network, trt.UffParser() as parser:
-
         #setting workspace szie
         builder.max_workspace_size = 1 << 30
         builder.debug_sync = True
         builder.fp16_mode = True
         # Parse the Uff Network
-        # https://docs.nvidia.com/deeplearning/sdk/tensorrt-api/python_api/parsers/Uff/pyUff.html
         uff_path = model_to_uff(model_path)
         parser.register_input(ModelData.INPUT_NAME, ModelData.INPUT_SHAPE)
         parser.register_output(ModelData.OUTPUT_NAME)
@@ -126,7 +122,6 @@ def build_engine(model_path):
 def load_normalized_test_data(data_path, pagelocked_buffer, num=randint(0, 9)):
     test_case_path = os.path.join(data_path, str(num) + ".pgm")
     # Flatten the image into a 1D array, normalize, and copy to pagelocked memory.
-    # numpy.ravel() 1D array
     img = np.array(Image.open(test_case_path)).ravel()
     np.copyto(pagelocked_buffer, 1.0 - img / 255.0)
     return num
@@ -157,7 +152,6 @@ def init(engine):
         # Append the device buffer to device bindings.
         bindings.append(int(device_mem))
         # Append to the appropriate list.
-
         if engine.binding_is_input(binding):
             inputs.append(HostDeviceMem(host_mem, device_mem))
         else:
@@ -166,25 +160,17 @@ def init(engine):
 
 def main():
     data_path, _ = find_data(description="using a UFF model file", subfolder="mnist")
-    model_path = "./models"
-
-    tStart = time.time()
     ctypes.CDLL(CLIP_PLUGIN_LIBRARY)
     with build_engine(MODEL_PATH) as engine:
         inputs, outputs, bindings, stream = init(engine)
         with open("sample.engine", "wb") as f:
             f.write(engine.serialize())
         with engine.create_execution_context() as context:
-
             num = load_normalized_test_data(data_path, pagelocked_buffer=inputs[0].host)
-            tStart1 = time.time()
             [output] = inference(context, bindings=bindings, inputs=inputs, outputs=outputs, stream=stream)
             pred = np.argmax(output)
             print("Test Case: " + str(num))
             print("Prediction: " + str(pred))
-            tEnd = time.time()
-            print('time=', tEnd - tStart)
-            print('time1=', tEnd - tStart1)
 
 if __name__ == '__main__':
    main()
