@@ -32,7 +32,7 @@
 
 1. ### Download TensorRT_mnist_example
 	```bash
-	git clone 
+	git clone https://github.com/junyu0704/tensorRT_mnist_example.git
 	```
 2. ### Build the plugin and its corresponding Python bindings.
 	```bash
