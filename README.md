@@ -28,7 +28,7 @@
 * cmake == 3.10.2
 
 ## Running the sample
-ref:https://docs.nvidia.com/deeplearning/sdk/tensorrt-sample-support-guide/index.html#uff_custom_plugin
+>ref:https://docs.nvidia.com/deeplearning/sdk/tensorrt-sample-support-guide/index.html#uff_custom_plugin
 
 1. ### Download TensorRT_mnist_example
 	```bash
