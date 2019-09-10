@@ -67,6 +67,6 @@
 6. ### Verify that the sample ran successfully. If the sample runs successfully you should see a match between the test case and the prediction.
 	```bash
 	=== Testing ===
-	Loading Test Case: 3
-	Prediction: 3
+	Loading Test Case: 1
+	Prediction: 1
 	```
