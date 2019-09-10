@@ -49,7 +49,7 @@ ref:https://docs.nvidia.com/deeplearning/sdk/tensorrt-sample-support-guide/index
 		-DNVINFER_LIB=/path/to/libnvinfer.so \
 		-DTRT_INC_DIR=/path/to/tensorrt/include/
 	```
-	- `cmake .. ` displays a complete list of configurable variables. If a variable is set to VARIABLE_NAME-NOTFOUND, then you’ll need to specify it manually or set the variable it is derived from correctly.
+	>cmake ..displays a complete list of configurable variables. If a variable is set to VARIABLE_NAME-NOTFOUND, then you’ll need to specify it manually or set the variable it is derived from correctly.
 
 3. ### Build the plugin.
 	```bash  
